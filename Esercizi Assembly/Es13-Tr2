@@ -1,0 +1,71 @@
+.data
+prompt: .asciiz "Inserisci X, Y, Z: "
+
+.text
+.globl main
+main:
+	li $v0,4
+	la $a0,prompt
+	syscall
+	
+	li $v0,5
+	syscall
+	move $a0,$v0		# X
+	li $v0,5
+	syscall
+	move $a1,$v0		# Y
+	li $v0,5
+	syscall
+	move $a2,$v0		# Z
+	
+	jal Funzione
+	move $a0,$v0
+	li $v0,1
+	syscall
+	li $v0,10
+	syscall
+	
+Funzione:
+	beq $a0,$zero,Check_Y
+	j Caso_ricorsivo
+	
+Caso_ricorsivo:
+	subu $sp,$sp,16
+	sw $ra,12($sp)
+	sw $a0,8($sp)
+	sw $a1,4($sp)
+	sw $a2,0($sp)
+	addi $a2,$a2,1
+	subi $a0,$a0,2
+	move $t0,$a2
+	move $a2,$a1
+	move $a1,$a0
+	move $a0,$t0
+	jal Funzione
+	lw $ra,12($sp)
+	lw $a0,8($sp)
+	lw $a1,4($sp)
+	lw $a2,0($sp)
+	addi $sp,$sp,16
+	mul $v0,$v0,$a0
+	jr $ra
+	
+Check_Y:
+	beq $a1,$zero,Check_Z
+	j Check_negative
+Check_Z:
+	beqz $a2,Caso_base
+	j Check_negative
+Check_negative:
+    	blt $a0,$zero, Caso_base
+    	blt $a2,$zero, Caso_base
+    	subi $t1, $a0, 2
+    	blt $t1,$zero Caso_base
+    	j Caso_ricorsivo	
+
+Caso_base:
+	li $v0,1
+	jr $ra
+	
+	
+	

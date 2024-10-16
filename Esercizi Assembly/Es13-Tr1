@@ -1,0 +1,65 @@
+.data
+prompt1: .asciiz "Inserisci la X: "
+prompt2: .asciiz "Inserisci la Y: "
+newLine: .asciiz "\n"
+
+.text
+.globl main
+main:
+	li $v0,4
+	la $a0,prompt1
+	syscall
+	li $v0,5
+	syscall
+	move $a0,$v0
+	
+	li $v0,4
+	la $a0,newLine
+	syscall
+	
+	li $v0,4
+	la $a0,prompt2
+	syscall
+	li $v0,5
+	syscall
+	move $a1,$v0
+	
+	jal Funzione
+	
+	move $a0,$v0
+	li $v0,1
+	syscall
+	li $v0,10
+	syscall
+	
+Funzione:
+	beqz $a0,Caso_base
+	beqz $a1,Caso_base
+	
+	subi $sp,$sp,12
+	sw $ra,8($sp)
+	sw $a0,4($sp)
+	sw $a1,0($sp)
+	move $s0,$a0
+	move $a0,$a1		# $a0 = Y
+	sub $a1,$s0,1		# X - 1
+	
+	jal Funzione
+	lw $ra,8($sp)
+	lw $a0,4($sp)
+	lw $a1,0($sp)
+	addi $sp,$sp,12
+	mul $v0,$v0,$a0
+	jr $ra
+	
+Caso_base:
+	li $v0,1
+	jr $ra
+	
+	
+	
+	
+	
+	
+	
+	

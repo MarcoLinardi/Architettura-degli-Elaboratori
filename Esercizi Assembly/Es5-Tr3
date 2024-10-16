@@ -1,0 +1,38 @@
+.data
+
+numero: .word 15
+
+.text
+.globl main
+main: 
+	
+	lw $t0, numero		# Carico il valore in $t0
+	lw $t1, numero		# Carico il numero in $t1 per decrementarlo
+	
+Controllo_While:
+	subi $t1,$t1,1		# Decremento il valore per iniziare il controllo
+	bnez $t1, Blocco_While	# Finchè $t1 non è uguale a 0 vado al ciclo while
+	
+Blocco_While:
+	div $t3,$t0,$t1		
+	mfhi $t4			# Sposto il  valore del registro "hi" in $t4 (valore del resto della divisione)
+	beqz $t4,Controllo	# Se il resto è uguale a 0, controllo se il divisore è 1
+	j Controllo_While	# Se il resto è diverso da 0, decremento il divisore e rifaccio il ciclo
+	
+Controllo:
+	beq $t1,1,Primo		# Se il divisore è 1, il numero è primo
+	j Non_Primo		# Se il divisore non è 1 il numero non è primo
+
+Primo:
+	li $t2,1
+	j Fine
+Non_Primo:
+	li $t2,2
+	j Fine
+
+Fine:
+	li $v0,10
+	syscall
+
+
+

@@ -1,0 +1,45 @@
+.data
+input:  .asciiz "Inserisci un numero intero positivo: "
+output: .asciiz "Il cubo del numero è: "
+
+.text
+.globl main
+
+main:
+	li $v0,4
+    	la $a0,input
+    	syscall
+
+    	li $v0,5
+    	syscall
+    	move $t0,$v0
+    	
+	add $t1,$t0,$zero
+	add $t2,$t0,$zero
+
+Primo_Loop:
+	beqz $t1,Secondo_Loop
+	add $t3,$t3,$t0
+	subi $t1,$t1,1
+	j Primo_Loop
+
+Secondo_Loop:
+	beqz $t2, Fine
+	add $t4,$t4,$t3
+	subi $t2,$t2,1
+	j Secondo_Loop
+
+Fine: 
+	li $v0,4
+	la $a0,output
+	syscall
+	move $a0,$t4
+	li $v0,1
+	syscall
+	li $v0,10
+	syscall
+	
+    	
+    	
+    	
+    

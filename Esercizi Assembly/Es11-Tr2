@@ -1,0 +1,44 @@
+.data
+stringa: .asciiz "anaconda gigante"
+prompt: .asciiz "Inserisci un carattere: "
+output: .asciiz "Occorrenze: "
+newLine: .asciiz "\n"
+
+.text
+.globl main
+main:
+	li $v0,4
+	la $a0,prompt
+	syscall
+	li $v0,12
+	syscall
+	move $t0,$v0		# Carattere da cercare
+	
+	li $t1,0			# Contatore occorrenze
+	la $t2,stringa		# Indirizzo stringa
+	
+Search_occurrency:
+	lb $t3,0($t2)
+	beq $t3,$zero,Print
+	bne $t3,$t0,Not_found
+	add $t1,$t1,1
+	add $t2,$t2,1
+	j Search_occurrency
+	
+Not_found:
+	add $t2,$t2,1
+	j Search_occurrency
+
+Print:	
+	li $v0,4
+	la $a0,newLine
+	syscall
+	li $v0,4
+	la $a0,output
+	syscall
+	move $a0,$t1
+	li $v0,1
+	syscall
+	li $v0,10
+	syscall
+	

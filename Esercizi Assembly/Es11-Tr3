@@ -1,0 +1,57 @@
+.data
+stringa: .asciiz "trentatre trentini entrarorono a trento tutti e trentatre trotterellando"
+prompt1: .asciiz "Inserisci il carattere da cercare: "
+prompt2: .asciiz "Inserisci il carattere da inserire: "
+newLine: .asciiz "\n"
+stringa_cambiata: .space 100
+
+.text
+.globl main
+main:
+	li $v0,4
+	la $a0,prompt1
+	syscall
+	li $v0,12
+	syscall
+	move $t1,$v0		#Carattere da cercare
+
+	li $v0,4
+	la $a0,newLine
+	syscall
+
+	li $v0,4
+	la $a0,prompt2
+	syscall
+	li $v0,12
+	syscall
+	move $t2,$v0		#Carattere da inserire
+
+	li $v0,4
+	la $a0,newLine
+	syscall
+
+	la $t0,stringa
+	la $t4,stringa_cambiata
+
+Search:
+	lb $t3,0($t0)
+	beq $t3,$zero,Print
+	beq $t3,$t1,Replace
+	addi $t0,$t0,1
+	sb $t3,0($t4)
+	addi $t4,$t4,1
+	j Search
+
+Replace:
+	addi $t0,$t0,1
+	sb $t2,0($t4)
+	addi $t4,$t4,1
+	j Search
+
+Print:
+	sb $zero,0($t4)
+	li $v0,4
+	la $a0,stringa_cambiata
+	syscall
+	li $v0,10
+	syscall

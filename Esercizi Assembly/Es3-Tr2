@@ -1,0 +1,60 @@
+.data
+    num1: .word 0       # Primo intero positivo
+    num2: .word 11       # Secondo intero positivo
+    num3: .word 7       # Terzo intero positivo
+    num4: .word 1982       # Quarto intero positivo
+    num5: .word 10051980     # Quinto intero positivo
+    count: .word 5       # Numero di elementi da considerare
+
+.text
+.globl main
+
+main:
+    # Carica gli indirizzi delle variabili nella memoria nei registri $t1 - $t5
+    la $t1, num1
+    la $t2, num2
+    la $t3, num3
+    la $t4, num4
+    la $t5, num5
+
+    li $t0, 0  # Inizializza la somma a 0
+
+    lw $t6, count
+
+    # Calcola la somma dei numeri
+    lw $t7, 0($t1)     # Carica il primo numero e lo somma
+    add $t0, $t0, $t7
+    lw $t7, 0($t2)     # Carica il secondo numero e lo somma
+    add $t0, $t0, $t7
+    lw $t7, 0($t3)     # Carica il terzo numero e lo somma
+    add $t0, $t0, $t7
+    lw $t7, 0($t4)     # Carica il quarto numero e lo somma
+    add $t0, $t0, $t7
+    lw $t7, 0($t5)     # Carica il quinto numero e lo somma
+    add $t0, $t0, $t7
+
+    # Calcola la media dividendo per il numero di elementi
+    div $t0, $t6
+
+    # Memorizza il risultato nel registro $t0
+    mflo $t0
+
+    # Stampa il risultato su console (se desiderato)
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    # Termina il programma
+    li $v0, 10
+    syscall
+
+
+
+
+
+
+
+
+
+
+

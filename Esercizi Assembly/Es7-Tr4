@@ -1,0 +1,99 @@
+.data
+input: .asciiz "Inserisci 3 numeri interi: "
+pi: .float 3.141592653589793
+area1: .float 0
+area2: .float 0
+area3: .float 0
+
+.text
+.globl main
+main:
+	lwc1 $f0,pi
+	
+	li $v0,4
+	la $a0,input
+	syscall
+	
+	li $v0,5			# 1° raggio
+	syscall
+	move $t0,$v0
+	mul $t1,$t0,$t0
+	mtc1 $t1,$f1
+	cvt.s.w $f1,$f1
+	mul.s $f4,$f0,$f1	# 1° Area
+	
+	li $v0,5			# 2° raggio
+	syscall
+	move $t2,$v0
+	mul $t3,$t2,$t2
+	mtc1 $t3,$f2
+	cvt.s.w $f2,$f2
+	mul.s $f5,$f0,$f2	# 2° Area
+	
+	li $v0,5			# 3° raggio
+	syscall
+	move $t4,$v0
+	mul $t5,$t4,$t4
+	mtc1 $t5,$f3
+	cvt.s.w $f3,$f3
+	mul.s $f6,$f0,$f3	# 3° Area
+	
+	cvt.w.s $f4,$f4
+	mfc1 $s0,$f4
+	cvt.w.s $f5,$f5
+	mfc1 $s1,$f5
+	cvt.w.s $f6,$f6
+	mfc1 $s2,$f6
+	
+	bgt $s0,$s1, Controllo_s0_s2
+	move $s3,$s0
+	move $s0,$s1
+	move $s1,$s3
+	j Controllo_s0_s2
+	
+Controllo_s0_s2:
+	bgt $s0,$s2 Controllo_s1_s2
+	move $s3,$s0
+	move $s0,$s2
+	move $s2,$s3
+	j Controllo_s1_s2
+	
+Controllo_s1_s2:
+	bgt $s1,$s2, Stampa
+	move $s3,$s1
+	move $s1,$s2
+	move $s2,$s3
+	j Stampa
+	
+Stampa:
+	mtc1 $s0,$f7
+	cvt.s.w $f7,$f7
+	mtc1 $s1,$f8
+	cvt.s.w $f8,$f8
+	mtc1 $s2,$f9
+	cvt.s.w $f9,$f9
+
+	s.s $f7,area1
+	s.s $f8,area2
+	s.s $f9,area3
+	
+	li $v0,2
+	l.s $f12,area1
+	syscall
+	li $v0,11
+	li $a0,' '
+	syscall
+	
+	li $v0,2
+	l.s $f12,area2
+	syscall
+	li $v0,11
+	li $a0,' '
+	syscall
+	
+	li $v0,2
+	l.s $f12,area3
+	syscall
+	
+	li $v0,10
+	syscall

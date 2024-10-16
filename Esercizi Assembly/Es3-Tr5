@@ -1,0 +1,35 @@
+.data
+
+X : .word -500
+Y : .word 899
+temp : .word 0
+
+.text
+.globl main
+
+main:
+
+lw $t4, X
+lw $t5, Y
+# Determina se X è positivo o negativo
+slti $t0,$t5,0
+# Determina se Y è pari o dispari
+andi $t1,$t5,1
+# Calcola la somma tra X e  Y
+add $t2,$t4,$t5
+# Calcolo il valore assoluto di X e Y
+sub $t4,$zero,$t4
+sub $t5,$zero,$t5
+# Calcolo la somma dei valori assoluti
+add $t6,$t4,$t5
+add $t7,$t4,$t2
+
+
+
+
+
+
+
+
+
+

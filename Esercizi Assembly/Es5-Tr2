@@ -1,0 +1,45 @@
+.data
+
+prompt0: .asciiz "Inserisci un numero intero > 2: "
+prompt1: .asciiz "Inserisci un altro numero intero > 1: "
+
+.text
+.globl main
+main:
+	li $v0,4           # Codice di servizio per la stampa di una stringa
+   	la $a0,prompt0     # Carica l'indirizzo del prompt1 in $a0
+    	syscall
+    	li $v0,5           # Codice di servizio per la lettura di un intero
+    	syscall
+    	move $t1,$v0       # Salva il numero letto in $t1
+    
+    	li $v0,4
+    	la $a0,prompt1
+    	syscall
+    	li $v0,5
+    	syscall
+    	move $t2,$v0	# Salva il numero letto in $t2
+    	
+    	li $t0,0		# Inizializzo un registro per il risultato
+    	
+Controllo_While:
+    	bgtz $t1,Blocco_While
+    	j Fine_While
+    	
+Blocco_While:
+	add $t0,$t0,$t2
+	subi $t1,$t1,1
+	j Controllo_While
+	
+Fine_While:
+	li $v0,1
+	move $a0,$t0
+	syscall
+	
+	li $v0,10
+	syscall
+    	
+    
+    
+    
+    
